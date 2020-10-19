@@ -1,12 +1,12 @@
 <?php
 
 getStatus();
-//getAllProfiles();
-//$newId = createProfile("bqj24@tester.com", "+447917654422");
+//$newId = createProfile("bqj24@tester.com", "+447917654422"); // email and phone number need to be unique
 //echo "\nnewId: $newId\n";
 //getProfile($newId);
-//updateProfile($newId, "bqj25@tester.com", "+447917654423");
+//getAllProfiles();
 //deleteProfile($newId);
+//getAllProfiles();
 
 
 // Get the status of the Customate sandbox (GET https://sandbox-api.gocustomate.com/v1/status)
@@ -66,7 +66,7 @@ function getAllProfiles() {
 }
 
 
-// Create a profile - email and phone need to be unique (POST https://sandbox-api.gocustomate.com/v1/profiles)
+// Create a profile - email and phone number need to be unique (POST https://sandbox-api.gocustomate.com/v1/profiles)
 function createProfile($email, $phone_number) {
     $date = (new Datetime()) -> format('Y-m-d\TH:i:s\Z');
     $uuid = getGUID();
@@ -125,7 +125,7 @@ function createProfile($email, $phone_number) {
 }
 
 
-// Get the profile - set $string_to_sign and CURLOPT_URL to the one just created (https://sandbox-api.gocustomate.com/v1/profiles/<profile_id>)
+// Get the profile (https://sandbox-api.gocustomate.com/v1/profiles/<profile_id>)
 function getProfile($id) {
     $date = (new Datetime()) -> format('Y-m-d\TH:i:s\Z');
     $uuid = getGUID();
@@ -145,63 +145,6 @@ function getProfile($id) {
         "PaymentService-Nonce:$uuid",
         "Authorization: Signature $signature"
     ]);
-
-    $response = curl_exec($ch);
-    echo "\nResponse\n--------\n";
-    var_dump($response);
-    curl_close($ch);
-}
-
-
-// Update a profile (PUT https://sandbox-api.gocustomate.com/v1/profiles/<profile_id>)
-function updateProfile($id, $email, $phone_number) {
-    $date = (new Datetime()) -> format('Y-m-d\TH:i:s\Z');
-    $uuid = getGUID();
-
-    $body = [
-      "type" => "personal",
-      "first_name" => "Bobby",
-      "middle_name" => "Quentino",
-      "last_name" => "Jones",
-      "email" => $email,
-      "phone_number" => $phone_number,
-      "birth_date" => "1980-01-02",
-      "title" => "mrs",
-      "gender" => "female",
-      "address" => [
-        "line_1" => "118 Boroughbridge Road",
-        "line_2" => "Near Bournville",
-        "line_3" => "Bournville",
-        "city" => "Birmingham",
-        "locality" => "Birmingham",
-        "postcode" => "B5 7DT",
-        "country" => "GB",
-      ],
-      "metadata" => [
-        "sample_internal_id" => "505f7b6e-d0e9-46da-a2f9-e2a737a29d19"
-      ]
-    ];
-
-    $requestBody = json_encode($body);
-    $contentHashSource = utf8_encode($requestBody);
-    $string_to_sign = utf8_encode("PUT\n/v1/profiles/$id\napplication/json\npaymentservice-contenthash:\npaymentservice-date:$date\npaymentservice-nonce:$uuid");
-
-    echo "\n****************************************\n\nRequest\n-------\n$string_to_sign\n";
-    $access_token = createToken($string_to_sign, getApiSecret());
-    $signature = getApiKey() . ":" . $access_token;
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, getApiUrl()."/profiles/$id");
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch, CURLOPT_HEADER, FALSE);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Content-Type: application/json",
-        "PaymentService-Date:$date",
-        "PaymentService-Nonce:$uuid",
-        "Authorization: Signature $signature"
-    ]);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $contentHashSource);
 
     $response = curl_exec($ch);
     echo "\nResponse\n--------\n";
@@ -264,12 +207,12 @@ function getApiUrl() {
 
 
 function getApiKey() {
-    return '01331fd1-d4d4-4ca4-a457-7635d7ce4a3e';
+    return '<YOUR API KEY>';
 }
 
 
 function getApiSecret() {
-    return 'c1e1aaf3ca4b44a7cc634939e74c260893e9d225961ce45098';
+    return '<YOUR API SECRET>';
 }
 
 
