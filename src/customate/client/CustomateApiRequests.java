@@ -96,6 +96,8 @@ public class CustomateApiRequests {
 				HttpRequest request = requestBuilder.build();
 
 				response = httpClient.send(request, BodyHandlers.ofString());
+				
+				System.out.println("\nResponse\n--------\n" + response);				
 
 			} catch (IOException | InterruptedException e) {
 				e.printStackTrace();
